@@ -178,8 +178,8 @@ handler.put(async (req, res) => {
       order.isPaid = true;
       order.paidAt = Date.now();
       order.paymentResult = {
-        id: req.body.id,
-        status: 'Paid',
+        id: req.body.pf_payment_id,
+        status: req.body.payment_status,
       };
       const paidOrder = await order.save();
       await db.disconnect();
