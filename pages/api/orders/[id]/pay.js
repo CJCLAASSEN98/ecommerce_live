@@ -179,8 +179,7 @@ handler.put(async (req, res) => {
       order.paidAt = Date.now();
       order.paymentResult = {
         id: req.body.id,
-        status: req.body.status,
-        email_address: req.body.email_address,
+        status: 'Paid',
       };
       const paidOrder = await order.save();
       await db.disconnect();
