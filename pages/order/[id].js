@@ -306,7 +306,7 @@ function Order({ params }) {
   ] = `http://www.shop.ajkitsune.co.za/order/${orderId}`;
   myData[
     'notify_url'
-  ] = `http://www.shop.ajkitsune.co.za/api/orders/${orderId}/notify_url`;
+  ] = `http://www.shop.ajkitsune.co.za/api/orders/${orderId}/pay`;
   // Buyer details
   myData['name_first'] = String(userInfo.name);
   myData['email_address'] = String(
