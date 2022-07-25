@@ -1,10 +1,22 @@
-import { List, ListItem, Typography, TextField, Button } from '@mui/material';
+import {
+  List,
+  ListItem,
+  Typography,
+  TextField,
+  Button,
+} from '@mui/material';
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect } from 'react';
+import React, {
+  useContext,
+  useEffect,
+} from 'react';
 import Layout from '../components/Layout';
 import { Store } from '../utils/Store';
 import Cookies from 'js-cookie';
-import { Controller, useForm } from 'react-hook-form';
+import {
+  Controller,
+  useForm,
+} from 'react-hook-form';
 import CheckoutWizard from '../components/CheckoutWizard';
 import Form from '../components/Form';
 
@@ -28,17 +40,37 @@ export default function Shipping() {
     if (!userInfo) {
       router.push('/login?redirect=/shipping');
     }
-    setValue('fullName', shippingAddress.fullName);
+    setValue(
+      'fullName',
+      shippingAddress.fullName
+    );
     setValue('address', shippingAddress.address);
     setValue('city', shippingAddress.city);
-    setValue('postalCode', shippingAddress.postalCode);
+    setValue(
+      'postalCode',
+      shippingAddress.postalCode
+    );
     setValue('country', shippingAddress.country);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const submitHandler = ({ fullName, address, city, postalCode, country }) => {
+  const submitHandler = ({
+    fullName,
+    address,
+    city,
+    postalCode,
+    country,
+  }) => {
     dispatch({
       type: 'SAVE_SHIPPING_ADDRESS',
-      payload: { fullName, address, city, postalCode, country, location },
+      payload: {
+        fullName,
+        address,
+        city,
+        postalCode,
+        country,
+        location,
+      },
     });
     Cookies.set(
       'shippingAddress',
@@ -54,6 +86,7 @@ export default function Shipping() {
     router.push('/payment');
   };
 
+  // eslint-disable-next-line no-unused-vars
   const chooseLocationHandler = () => {
     const fullName = getValues('fullName');
     const address = getValues('address');
@@ -62,7 +95,13 @@ export default function Shipping() {
     const country = getValues('country');
     dispatch({
       type: 'SAVE_SHIPPING_ADDRESS',
-      payload: { fullName, address, city, postalCode, country },
+      payload: {
+        fullName,
+        address,
+        city,
+        postalCode,
+        country,
+      },
     });
     Cookies.set(
       'shippingAddress',
@@ -80,7 +119,9 @@ export default function Shipping() {
   return (
     <Layout title="Shipping Address">
       <CheckoutWizard activeStep={1} />
-      <Form onSubmit={handleSubmit(submitHandler)}>
+      <Form
+        onSubmit={handleSubmit(submitHandler)}
+      >
         <Typography component="h1" variant="h1">
           Shipping Address
         </Typography>
@@ -103,7 +144,8 @@ export default function Shipping() {
                   error={Boolean(errors.fullName)}
                   helperText={
                     errors.fullName
-                      ? errors.fullName.type === 'minLength'
+                      ? errors.fullName.type ===
+                        'minLength'
                         ? 'Full Name length is more than 1'
                         : 'Full Name is required'
                       : ''
@@ -131,7 +173,8 @@ export default function Shipping() {
                   error={Boolean(errors.address)}
                   helperText={
                     errors.address
-                      ? errors.address.type === 'minLength'
+                      ? errors.address.type ===
+                        'minLength'
                         ? 'Address length is more than 1'
                         : 'Address is required'
                       : ''
@@ -159,7 +202,8 @@ export default function Shipping() {
                   error={Boolean(errors.city)}
                   helperText={
                     errors.city
-                      ? errors.city.type === 'minLength'
+                      ? errors.city.type ===
+                        'minLength'
                         ? 'City length is more than 1'
                         : 'City is required'
                       : ''
@@ -184,10 +228,13 @@ export default function Shipping() {
                   fullWidth
                   id="postalCode"
                   label="Postal Code"
-                  error={Boolean(errors.postalCode)}
+                  error={Boolean(
+                    errors.postalCode
+                  )}
                   helperText={
                     errors.postalCode
-                      ? errors.postalCode.type === 'minLength'
+                      ? errors.postalCode.type ===
+                        'minLength'
                         ? 'Postal Code length is more than 1'
                         : 'Postal Code is required'
                       : ''
@@ -215,7 +262,8 @@ export default function Shipping() {
                   error={Boolean(errors.country)}
                   helperText={
                     errors.country
-                      ? errors.country.type === 'minLength'
+                      ? errors.country.type ===
+                        'minLength'
                         ? 'Country length is more than 1'
                         : 'Country is required'
                       : ''
@@ -226,20 +274,26 @@ export default function Shipping() {
             ></Controller>
           </ListItem>
           <ListItem>
-            <Button
+            {/* <Button
               variant="contained"
               type="button"
               color="secondary"
               onClick={chooseLocationHandler}
             >
               Choose on map
-            </Button>
+            </Button> */}
             <Typography>
-              {location.lat && `${location.lat}, ${location.lat}`}
+              {location.lat &&
+                `${location.lat}, ${location.lat}`}
             </Typography>
           </ListItem>
           <ListItem>
-            <Button variant="contained" type="submit" fullWidth color="primary">
+            <Button
+              variant="contained"
+              type="submit"
+              fullWidth
+              color="primary"
+            >
               Continue
             </Button>
           </ListItem>

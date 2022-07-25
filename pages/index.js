@@ -1,5 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 import NextLink from 'next/link';
-import { Grid, Link, Typography } from '@mui/material';
+import {
+  Grid,
+  Link,
+  Typography,
+} from '@mui/material';
 import Layout from '../components/Layout';
 import db from '../utils/db';
 import Product from '../models/Product';
@@ -15,21 +20,33 @@ import classes from '../utils/classes';
 export default function Home(props) {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
-  const { topRatedProducts, featuredProducts } = props;
+  const { topRatedProducts, featuredProducts } =
+    props;
   const addToCartHandler = async (product) => {
-    const existItem = state.cart.cartItems.find((x) => x._id === product._id);
-    const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${product._id}`);
+    const existItem = state.cart.cartItems.find(
+      (x) => x._id === product._id
+    );
+    const quantity = existItem
+      ? existItem.quantity + 1
+      : 1;
+    const { data } = await axios.get(
+      `/api/products/${product._id}`
+    );
     if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
+      window.alert(
+        'Sorry. Product is out of stock'
+      );
       return;
     }
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
+    dispatch({
+      type: 'CART_ADD_ITEM',
+      payload: { ...product, quantity },
+    });
     router.push('/cart');
   };
   return (
     <Layout>
-      <Carousel>
+      <Carousel showThumbs={false}>
         {featuredProducts.map((product) => (
           <NextLink
             key={product._id}
@@ -37,13 +54,18 @@ export default function Home(props) {
             passHref
           >
             <Link sx={classes.flex}>
-              <img src={product.featuredImage} alt={product.name}></img>
+              <img
+                src={product.featuredImage}
+                alt={product.name}
+              ></img>
             </Link>
           </NextLink>
         ))}
       </Carousel>
 
-      <Typography variant="h2">Popular Products 1</Typography>
+      <Typography variant="h2">
+        Popular Products 1
+      </Typography>
       <Grid container spacing={3}>
         {topRatedProducts.map((product) => (
           <Grid item md={4} key={product.name}>
@@ -66,7 +88,10 @@ export async function getServerSideProps() {
   )
     .lean()
     .limit(3);
-  const topRatedProductsDocs = await Product.find({}, '-reviews')
+  const topRatedProductsDocs = await Product.find(
+    {},
+    '-reviews'
+  )
     .lean()
     .sort({
       rating: -1,
@@ -75,8 +100,12 @@ export async function getServerSideProps() {
   await db.disconnect();
   return {
     props: {
-      featuredProducts: featuredProductsDocs.map(db.convertDocToObj),
-      topRatedProducts: topRatedProductsDocs.map(db.convertDocToObj),
+      featuredProducts: featuredProductsDocs.map(
+        db.convertDocToObj
+      ),
+      topRatedProducts: topRatedProductsDocs.map(
+        db.convertDocToObj
+      ),
     },
   };
 }

@@ -2,7 +2,10 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import React, { useEffect, useContext } from 'react';
+import React, {
+  useEffect,
+  useContext,
+} from 'react';
 import {
   Grid,
   List,
@@ -18,7 +21,10 @@ import Form from '../components/Form';
 import { Store } from '../utils/Store';
 import Layout from '../components/Layout';
 import classes from '../utils/classes';
-import { Controller, useForm } from 'react-hook-form';
+import {
+  Controller,
+  useForm,
+} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import Cookies from 'js-cookie';
 
@@ -30,7 +36,8 @@ function Profile() {
     formState: { errors },
     setValue,
   } = useForm();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } =
+    useSnackbar();
   const router = useRouter();
   const { userInfo } = state;
 
@@ -40,11 +47,19 @@ function Profile() {
     }
     setValue('name', userInfo.name);
     setValue('email', userInfo.email);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const submitHandler = async ({ name, email, password, confirmPassword }) => {
+  const submitHandler = async ({
+    name,
+    email,
+    password,
+    confirmPassword,
+  }) => {
     closeSnackbar();
     if (password !== confirmPassword) {
-      enqueueSnackbar("Passwords don't match", { variant: 'error' });
+      enqueueSnackbar("Passwords don't match", {
+        variant: 'error',
+      });
       return;
     }
     try {
@@ -55,14 +70,29 @@ function Profile() {
           email,
           password,
         },
-        { headers: { authorization: `Bearer ${userInfo.token}` } }
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
       );
-      dispatch({ type: 'USER_LOGIN', payload: data });
-      Cookies.set('userInfo', JSON.stringify(data));
+      dispatch({
+        type: 'USER_LOGIN',
+        payload: data,
+      });
+      Cookies.set(
+        'userInfo',
+        JSON.stringify(data)
+      );
 
-      enqueueSnackbar('Profile updated successfully', { variant: 'success' });
+      enqueueSnackbar(
+        'Profile updated successfully',
+        { variant: 'success' }
+      );
     } catch (err) {
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(err), {
+        variant: 'error',
+      });
     }
   };
   return (
@@ -72,11 +102,18 @@ function Profile() {
           <Card sx={classes.section}>
             <List>
               <NextLink href="/profile" passHref>
-                <ListItem selected button component="a">
+                <ListItem
+                  selected
+                  button
+                  component="a"
+                >
                   <ListItemText primary="User Profile"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/order-history" passHref>
+              <NextLink
+                href="/order-history"
+                passHref
+              >
                 <ListItem button component="a">
                   <ListItemText primary="Order History"></ListItemText>
                 </ListItem>
@@ -88,12 +125,19 @@ function Profile() {
           <Card sx={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h1" variant="h1">
+                <Typography
+                  component="h1"
+                  variant="h1"
+                >
                   Profile
                 </Typography>
               </ListItem>
               <ListItem>
-                <Form onSubmit={handleSubmit(submitHandler)}>
+                <Form
+                  onSubmit={handleSubmit(
+                    submitHandler
+                  )}
+                >
                   <List>
                     <ListItem>
                       <Controller
@@ -110,11 +154,17 @@ function Profile() {
                             fullWidth
                             id="name"
                             label="Name"
-                            inputProps={{ type: 'name' }}
-                            error={Boolean(errors.name)}
+                            inputProps={{
+                              type: 'name',
+                            }}
+                            error={Boolean(
+                              errors.name
+                            )}
                             helperText={
                               errors.name
-                                ? errors.name.type === 'minLength'
+                                ? errors.name
+                                    .type ===
+                                  'minLength'
                                   ? 'Name length is more than 1'
                                   : 'Name is required'
                                 : ''
@@ -131,7 +181,8 @@ function Profile() {
                         defaultValue=""
                         rules={{
                           required: true,
-                          pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                          pattern:
+                            /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
                         }}
                         render={({ field }) => (
                           <TextField
@@ -139,11 +190,17 @@ function Profile() {
                             fullWidth
                             id="email"
                             label="Email"
-                            inputProps={{ type: 'email' }}
-                            error={Boolean(errors.email)}
+                            inputProps={{
+                              type: 'email',
+                            }}
+                            error={Boolean(
+                              errors.email
+                            )}
                             helperText={
                               errors.email
-                                ? errors.email.type === 'pattern'
+                                ? errors.email
+                                    .type ===
+                                  'pattern'
                                   ? 'Email is not valid'
                                   : 'Email is required'
                                 : ''
@@ -170,8 +227,12 @@ function Profile() {
                             fullWidth
                             id="password"
                             label="Password"
-                            inputProps={{ type: 'password' }}
-                            error={Boolean(errors.password)}
+                            inputProps={{
+                              type: 'password',
+                            }}
+                            error={Boolean(
+                              errors.password
+                            )}
                             helperText={
                               errors.password
                                 ? 'Password length is more than 5'
@@ -199,8 +260,12 @@ function Profile() {
                             fullWidth
                             id="confirmPassword"
                             label="Confirm Password"
-                            inputProps={{ type: 'password' }}
-                            error={Boolean(errors.confirmPassword)}
+                            inputProps={{
+                              type: 'password',
+                            }}
+                            error={Boolean(
+                              errors.confirmPassword
+                            )}
                             helperText={
                               errors.password
                                 ? 'Confirm Password length is more than 5'
@@ -232,4 +297,7 @@ function Profile() {
   );
 }
 
-export default dynamic(() => Promise.resolve(Profile), { ssr: false });
+export default dynamic(
+  () => Promise.resolve(Profile),
+  { ssr: false }
+);

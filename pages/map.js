@@ -2,10 +2,18 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import classes from '../utils/classes';
 import { Store } from '../utils/Store';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
-import { CircularProgress, Box } from '@mui/material';
+import {
+  CircularProgress,
+  Box,
+} from '@mui/material';
 import {
   GoogleMap,
   LoadScript,
@@ -14,7 +22,10 @@ import {
 } from '@react-google-maps/api';
 import { getError } from '../utils/error';
 
-const defaultLocation = { lat: 45.516, lng: -73.56 };
+const defaultLocation = {
+  lat: 45.516,
+  lng: -73.56,
+};
 const libs = ['places'];
 
 function Map() {
@@ -24,41 +35,58 @@ function Map() {
   const { state, dispatch } = useContext(Store);
   const { userInfo } = state;
 
-  const [googleApiKey, setGoogleApiKey] = useState('');
+  const [googleApiKey, setGoogleApiKey] =
+    useState('');
   useEffect(() => {
     const fetchGoogleApiKey = async () => {
       try {
-        const { data } = await axios('/api/keys/google', {
-          headers: { authorization: `Bearer ${userInfo.token}` },
-        });
+        const { data } = await axios(
+          '/api/keys/google',
+          {
+            headers: {
+              authorization: `Bearer ${userInfo.token}`,
+            },
+          }
+        );
         setGoogleApiKey(data);
         getUserCurrentLocation();
       } catch (err) {
-        enqueueSnackbar(getError(err), { variant: 'error' });
+        enqueueSnackbar(getError(err), {
+          variant: 'error',
+        });
       }
     };
     fetchGoogleApiKey();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [center, setCenter] = useState(defaultLocation);
-  const [location, setLocation] = useState(center);
+  const [center, setCenter] = useState(
+    defaultLocation
+  );
+  const [location, setLocation] =
+    useState(center);
 
   const getUserCurrentLocation = () => {
     if (!navigator.geolocation) {
-      enqueueSnackbar('Geolocation is not supported by this browser', {
-        variant: 'error',
-      });
+      enqueueSnackbar(
+        'Geolocation is not supported by this browser',
+        {
+          variant: 'error',
+        }
+      );
     } else {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setCenter({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-        setLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCenter({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          setLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        }
+      );
     }
   };
 
@@ -80,9 +108,17 @@ function Map() {
     placeRef.current = place;
   };
   const onPlacesChanged = () => {
-    const place = placeRef.current.getPlaces()[0].geometry.location;
-    setCenter({ lat: place.lat(), lng: place.lng() });
-    setLocation({ lat: place.lat(), lng: place.lng() });
+    const place =
+      placeRef.current.getPlaces()[0].geometry
+        .location;
+    setCenter({
+      lat: place.lat(),
+      lng: place.lng(),
+    });
+    setLocation({
+      lat: place.lat(),
+      lng: place.lng(),
+    });
   };
   const onConfirm = () => {
     const places = placeRef.current.getPlaces();
@@ -98,9 +134,12 @@ function Map() {
           googleAddressId: places[0].id,
         },
       });
-      enqueueSnackbar('location selected successfully', {
-        variant: 'success',
-      });
+      enqueueSnackbar(
+        'location selected successfully',
+        {
+          variant: 'success',
+        }
+      );
       router.push('/shipping');
     }
   };
@@ -109,10 +148,16 @@ function Map() {
   };
   return googleApiKey ? (
     <Box sx={classes.fullHeight}>
-      <LoadScript libraries={libs} googleMapsApiKey={googleApiKey}>
+      <LoadScript
+        libraries={libs}
+        googleMapsApiKey={googleApiKey}
+      >
         <GoogleMap
           id="sample-map"
-          mapContainerStyle={{ height: '100%', width: '100%' }}
+          mapContainerStyle={{
+            height: '100%',
+            width: '100%',
+          }}
           center={center}
           zoom={15}
           onLoad={onLoad}
@@ -123,13 +168,22 @@ function Map() {
             onPlacesChanged={onPlacesChanged}
           >
             <Box sx={classes.mapInputBox}>
-              <input type="text" placeholder="Enter your address"></input>
-              <button type="button" onClick={onConfirm}>
+              <input
+                type="text"
+                placeholder="Enter your address"
+              ></input>
+              <button
+                type="button"
+                onClick={onConfirm}
+              >
                 Confirm
               </button>
             </Box>
           </StandaloneSearchBox>
-          <Marker position={location} onLoad={onMarkerLoad}></Marker>
+          <Marker
+            position={location}
+            onLoad={onMarkerLoad}
+          ></Marker>
         </GoogleMap>
       </LoadScript>
     </Box>
@@ -138,4 +192,7 @@ function Map() {
   );
 }
 
-export default dynamic(() => Promise.resolve(Map), { ssr: false });
+export default dynamic(
+  () => Promise.resolve(Map),
+  { ssr: false }
+);

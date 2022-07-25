@@ -2,7 +2,11 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import React, { useEffect, useContext, useReducer } from 'react';
+import React, {
+  useEffect,
+  useContext,
+  useReducer,
+} from 'react';
 import {
   CircularProgress,
   Grid,
@@ -28,20 +32,41 @@ import { useSnackbar } from 'notistack';
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_REQUEST':
-      return { ...state, loading: true, error: '' };
+      return {
+        ...state,
+        loading: true,
+        error: '',
+      };
     case 'FETCH_SUCCESS':
-      return { ...state, loading: false, users: action.payload, error: '' };
+      return {
+        ...state,
+        loading: false,
+        users: action.payload,
+        error: '',
+      };
     case 'FETCH_FAIL':
-      return { ...state, loading: false, error: action.payload };
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
     case 'DELETE_REQUEST':
       return { ...state, loadingDelete: true };
     case 'DELETE_SUCCESS':
-      return { ...state, loadingDelete: false, successDelete: true };
+      return {
+        ...state,
+        loadingDelete: false,
+        successDelete: true,
+      };
     case 'DELETE_FAIL':
       return { ...state, loadingDelete: false };
     case 'DELETE_RESET':
-      return { ...state, loadingDelete: false, successDelete: false };
+      return {
+        ...state,
+        loadingDelete: false,
+        successDelete: false,
+      };
     default:
       state;
   }
@@ -53,12 +78,20 @@ function AdminUsers() {
 
   const { userInfo } = state;
 
-  const [{ loading, error, users, successDelete, loadingDelete }, dispatch] =
-    useReducer(reducer, {
-      loading: true,
-      users: [],
-      error: '',
-    });
+  const [
+    {
+      loading,
+      error,
+      users,
+      successDelete,
+      loadingDelete,
+    },
+    dispatch,
+  ] = useReducer(reducer, {
+    loading: true,
+    users: [],
+    error: '',
+  });
 
   useEffect(() => {
     if (!userInfo) {
@@ -67,12 +100,23 @@ function AdminUsers() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/admin/users`, {
-          headers: { authorization: `Bearer ${userInfo.token}` },
+        const { data } = await axios.get(
+          `/api/admin/users`,
+          {
+            headers: {
+              authorization: `Bearer ${userInfo.token}`,
+            },
+          }
+        );
+        dispatch({
+          type: 'FETCH_SUCCESS',
+          payload: data,
         });
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {
-        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
+        dispatch({
+          type: 'FETCH_FAIL',
+          payload: getError(err),
+        });
       }
     };
     if (successDelete) {
@@ -80,6 +124,7 @@ function AdminUsers() {
     } else {
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [successDelete]);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -90,14 +135,24 @@ function AdminUsers() {
     }
     try {
       dispatch({ type: 'DELETE_REQUEST' });
-      await axios.delete(`/api/admin/users/${userId}`, {
-        headers: { authorization: `Bearer ${userInfo.token}` },
-      });
+      await axios.delete(
+        `/api/admin/users/${userId}`,
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
       dispatch({ type: 'DELETE_SUCCESS' });
-      enqueueSnackbar('User deleted successfully', { variant: 'success' });
+      enqueueSnackbar(
+        'User deleted successfully',
+        { variant: 'success' }
+      );
     } catch (err) {
       dispatch({ type: 'DELETE_FAIL' });
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(err), {
+        variant: 'error',
+      });
     }
   };
   return (
@@ -106,23 +161,39 @@ function AdminUsers() {
         <Grid item md={3} xs={12}>
           <Card sx={classes.section}>
             <List>
-              <NextLink href="/admin/dashboard" passHref>
+              <NextLink
+                href="/admin/dashboard"
+                passHref
+              >
                 <ListItem button component="a">
                   <ListItemText primary="Admin Dashboard"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/orders" passHref>
+              <NextLink
+                href="/admin/orders"
+                passHref
+              >
                 <ListItem button component="a">
                   <ListItemText primary="Orders"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/products" passHref>
+              <NextLink
+                href="/admin/products"
+                passHref
+              >
                 <ListItem button component="a">
                   <ListItemText primary="Products"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/users" passHref>
-                <ListItem selected button component="a">
+              <NextLink
+                href="/admin/users"
+                passHref
+              >
+                <ListItem
+                  selected
+                  button
+                  component="a"
+                >
                   <ListItemText primary="Users"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -133,47 +204,86 @@ function AdminUsers() {
           <Card sx={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h1" variant="h1">
+                <Typography
+                  component="h1"
+                  variant="h1"
+                >
                   Users
                 </Typography>
-                {loadingDelete && <CircularProgress />}
+                {loadingDelete && (
+                  <CircularProgress />
+                )}
               </ListItem>
 
               <ListItem>
                 {loading ? (
                   <CircularProgress />
                 ) : error ? (
-                  <Typography sx={classes.error}>{error}</Typography>
+                  <Typography sx={classes.error}>
+                    {error}
+                  </Typography>
                 ) : (
                   <TableContainer>
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>ID</TableCell>
-                          <TableCell>NAME</TableCell>
-                          <TableCell>EMAIL</TableCell>
-                          <TableCell>ISADMIN</TableCell>
-                          <TableCell>ACTIONS</TableCell>
+                          <TableCell>
+                            ID
+                          </TableCell>
+                          <TableCell>
+                            NAME
+                          </TableCell>
+                          <TableCell>
+                            EMAIL
+                          </TableCell>
+                          <TableCell>
+                            ISADMIN
+                          </TableCell>
+                          <TableCell>
+                            ACTIONS
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {users.map((user) => (
-                          <TableRow key={user._id}>
-                            <TableCell>{user._id.substring(20, 24)}</TableCell>
-                            <TableCell>{user.name}</TableCell>
-                            <TableCell>{user.email}</TableCell>
-                            <TableCell>{user.isAdmin ? 'YES' : 'NO'}</TableCell>
+                          <TableRow
+                            key={user._id}
+                          >
+                            <TableCell>
+                              {user._id.substring(
+                                20,
+                                24
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {user.name}
+                            </TableCell>
+                            <TableCell>
+                              {user.email}
+                            </TableCell>
+                            <TableCell>
+                              {user.isAdmin
+                                ? 'YES'
+                                : 'NO'}
+                            </TableCell>
                             <TableCell>
                               <NextLink
                                 href={`/admin/user/${user._id}`}
                                 passHref
                               >
-                                <Button size="small" variant="contained">
+                                <Button
+                                  size="small"
+                                  variant="contained"
+                                >
                                   Edit
                                 </Button>
                               </NextLink>{' '}
                               <Button
-                                onClick={() => deleteHandler(user._id)}
+                                onClick={() =>
+                                  deleteHandler(
+                                    user._id
+                                  )
+                                }
                                 size="small"
                                 variant="contained"
                               >
@@ -195,4 +305,7 @@ function AdminUsers() {
   );
 }
 
-export default dynamic(() => Promise.resolve(AdminUsers), { ssr: false });
+export default dynamic(
+  () => Promise.resolve(AdminUsers),
+  { ssr: false }
+);

@@ -2,7 +2,11 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import React, { useEffect, useContext, useReducer } from 'react';
+import React, {
+  useEffect,
+  useContext,
+  useReducer,
+} from 'react';
 import {
   CircularProgress,
   Grid,
@@ -27,11 +31,24 @@ import classes from '../../utils/classes';
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_REQUEST':
-      return { ...state, loading: true, error: '' };
+      return {
+        ...state,
+        loading: true,
+        error: '',
+      };
     case 'FETCH_SUCCESS':
-      return { ...state, loading: false, orders: action.payload, error: '' };
+      return {
+        ...state,
+        loading: false,
+        orders: action.payload,
+        error: '',
+      };
     case 'FETCH_FAIL':
-      return { ...state, loading: false, error: action.payload };
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
     default:
       state;
   }
@@ -43,11 +60,12 @@ function AdminOrders() {
 
   const { userInfo } = state;
 
-  const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
-    loading: true,
-    orders: [],
-    error: '',
-  });
+  const [{ loading, error, orders }, dispatch] =
+    useReducer(reducer, {
+      loading: true,
+      orders: [],
+      error: '',
+    });
 
   useEffect(() => {
     if (!userInfo) {
@@ -56,15 +74,27 @@ function AdminOrders() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/admin/orders`, {
-          headers: { authorization: `Bearer ${userInfo.token}` },
+        const { data } = await axios.get(
+          `/api/admin/orders`,
+          {
+            headers: {
+              authorization: `Bearer ${userInfo.token}`,
+            },
+          }
+        );
+        dispatch({
+          type: 'FETCH_SUCCESS',
+          payload: data,
         });
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {
-        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
+        dispatch({
+          type: 'FETCH_FAIL',
+          payload: getError(err),
+        });
       }
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Layout title="Orders">
@@ -72,22 +102,38 @@ function AdminOrders() {
         <Grid item md={3} xs={12}>
           <Card sx={classes.section}>
             <List>
-              <NextLink href="/admin/dashboard" passHref>
+              <NextLink
+                href="/admin/dashboard"
+                passHref
+              >
                 <ListItem button component="a">
                   <ListItemText primary="Admin Dashboard"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/orders" passHref>
-                <ListItem selected button component="a">
+              <NextLink
+                href="/admin/orders"
+                passHref
+              >
+                <ListItem
+                  selected
+                  button
+                  component="a"
+                >
                   <ListItemText primary="Orders"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/products" passHref>
+              <NextLink
+                href="/admin/products"
+                passHref
+              >
                 <ListItem button component="a">
                   <ListItemText primary="Products"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/users" passHref>
+              <NextLink
+                href="/admin/users"
+                passHref
+              >
                 <ListItem button component="a">
                   <ListItemText primary="Users"></ListItemText>
                 </ListItem>
@@ -99,7 +145,10 @@ function AdminOrders() {
           <Card sx={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h1" variant="h1">
+                <Typography
+                  component="h1"
+                  variant="h1"
+                >
                   Orders
                 </Typography>
               </ListItem>
@@ -108,30 +157,59 @@ function AdminOrders() {
                 {loading ? (
                   <CircularProgress />
                 ) : error ? (
-                  <Typography sx={classes.error}>{error}</Typography>
+                  <Typography sx={classes.error}>
+                    {error}
+                  </Typography>
                 ) : (
                   <TableContainer>
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>ID</TableCell>
-                          <TableCell>USER</TableCell>
-                          <TableCell>DATE</TableCell>
-                          <TableCell>TOTAL</TableCell>
-                          <TableCell>PAID</TableCell>
-                          <TableCell>DELIVERED</TableCell>
-                          <TableCell>ACTION</TableCell>
+                          <TableCell>
+                            ID
+                          </TableCell>
+                          <TableCell>
+                            USER
+                          </TableCell>
+                          <TableCell>
+                            DATE
+                          </TableCell>
+                          <TableCell>
+                            TOTAL
+                          </TableCell>
+                          <TableCell>
+                            PAID
+                          </TableCell>
+                          <TableCell>
+                            DELIVERED
+                          </TableCell>
+                          <TableCell>
+                            ACTION
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {orders.map((order) => (
-                          <TableRow key={order._id}>
-                            <TableCell>{order._id.substring(20, 24)}</TableCell>
+                          <TableRow
+                            key={order._id}
+                          >
                             <TableCell>
-                              {order.user ? order.user.name : 'DELETED USER'}
+                              {order._id.substring(
+                                20,
+                                24
+                              )}
                             </TableCell>
-                            <TableCell>{order.createdAt}</TableCell>
-                            <TableCell>${order.totalPrice}</TableCell>
+                            <TableCell>
+                              {order.user
+                                ? order.user.name
+                                : 'DELETED USER'}
+                            </TableCell>
+                            <TableCell>
+                              {order.createdAt}
+                            </TableCell>
+                            <TableCell>
+                              ${order.totalPrice}
+                            </TableCell>
                             <TableCell>
                               {order.isPaid
                                 ? `paid at ${order.paidAt}`
@@ -143,8 +221,13 @@ function AdminOrders() {
                                 : 'not delivered'}
                             </TableCell>
                             <TableCell>
-                              <NextLink href={`/order/${order._id}`} passHref>
-                                <Button variant="contained">Details</Button>
+                              <NextLink
+                                href={`/order/${order._id}`}
+                                passHref
+                              >
+                                <Button variant="contained">
+                                  Details
+                                </Button>
                               </NextLink>
                             </TableCell>
                           </TableRow>
@@ -162,4 +245,7 @@ function AdminOrders() {
   );
 }
 
-export default dynamic(() => Promise.resolve(AdminOrders), { ssr: false });
+export default dynamic(
+  () => Promise.resolve(AdminOrders),
+  { ssr: false }
+);

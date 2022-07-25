@@ -2,7 +2,12 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import React, { useEffect, useContext, useReducer, useState } from 'react';
+import React, {
+  useEffect,
+  useContext,
+  useReducer,
+  useState,
+} from 'react';
 import {
   Grid,
   List,
@@ -19,7 +24,10 @@ import {
 import { getError } from '../../../utils/error';
 import { Store } from '../../../utils/Store';
 import Layout from '../../../components/Layout';
-import { Controller, useForm } from 'react-hook-form';
+import {
+  Controller,
+  useForm,
+} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import Form from '../../../components/Form';
 import classes from '../../../utils/classes';
@@ -27,19 +35,47 @@ import classes from '../../../utils/classes';
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_REQUEST':
-      return { ...state, loading: true, error: '' };
+      return {
+        ...state,
+        loading: true,
+        error: '',
+      };
     case 'FETCH_SUCCESS':
-      return { ...state, loading: false, error: '' };
+      return {
+        ...state,
+        loading: false,
+        error: '',
+      };
     case 'FETCH_FAIL':
-      return { ...state, loading: false, error: action.payload };
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
     case 'UPDATE_REQUEST':
-      return { ...state, loadingUpdate: true, errorUpdate: '' };
+      return {
+        ...state,
+        loadingUpdate: true,
+        errorUpdate: '',
+      };
     case 'UPDATE_SUCCESS':
-      return { ...state, loadingUpdate: false, errorUpdate: '' };
+      return {
+        ...state,
+        loadingUpdate: false,
+        errorUpdate: '',
+      };
     case 'UPDATE_FAIL':
-      return { ...state, loadingUpdate: false, errorUpdate: action.payload };
+      return {
+        ...state,
+        loadingUpdate: false,
+        errorUpdate: action.payload,
+      };
     case 'UPLOAD_REQUEST':
-      return { ...state, loadingUpload: true, errorUpload: '' };
+      return {
+        ...state,
+        loadingUpload: true,
+        errorUpload: '',
+      };
     case 'UPLOAD_SUCCESS':
       return {
         ...state,
@@ -47,7 +83,11 @@ function reducer(state, action) {
         errorUpload: '',
       };
     case 'UPLOAD_FAIL':
-      return { ...state, loadingUpload: false, errorUpload: action.payload };
+      return {
+        ...state,
+        loadingUpload: false,
+        errorUpload: action.payload,
+      };
 
     default:
       return state;
@@ -57,7 +97,10 @@ function reducer(state, action) {
 function UserEdit({ params }) {
   const userId = params.id;
   const { state } = useContext(Store);
-  const [{ loading, error, loadingUpdate }, dispatch] = useReducer(reducer, {
+  const [
+    { loading, error, loadingUpdate },
+    dispatch,
+  ] = useReducer(reducer, {
     loading: true,
     error: '',
   });
@@ -68,7 +111,8 @@ function UserEdit({ params }) {
     setValue,
   } = useForm();
   const [isAdmin, setIsAdmin] = useState(false);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } =
+    useSnackbar();
   const router = useRouter();
 
   const { userInfo } = state;
@@ -80,18 +124,27 @@ function UserEdit({ params }) {
       const fetchData = async () => {
         try {
           dispatch({ type: 'FETCH_REQUEST' });
-          const { data } = await axios.get(`/api/admin/users/${userId}`, {
-            headers: { authorization: `Bearer ${userInfo.token}` },
-          });
+          const { data } = await axios.get(
+            `/api/admin/users/${userId}`,
+            {
+              headers: {
+                authorization: `Bearer ${userInfo.token}`,
+              },
+            }
+          );
           setIsAdmin(data.isAdmin);
           dispatch({ type: 'FETCH_SUCCESS' });
           setValue('name', data.name);
         } catch (err) {
-          dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
+          dispatch({
+            type: 'FETCH_FAIL',
+            payload: getError(err),
+          });
         }
       };
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const submitHandler = async ({ name }) => {
@@ -104,14 +157,26 @@ function UserEdit({ params }) {
           name,
           isAdmin,
         },
-        { headers: { authorization: `Bearer ${userInfo.token}` } }
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
       );
       dispatch({ type: 'UPDATE_SUCCESS' });
-      enqueueSnackbar('User updated successfully', { variant: 'success' });
+      enqueueSnackbar(
+        'User updated successfully',
+        { variant: 'success' }
+      );
       router.push('/admin/users');
     } catch (err) {
-      dispatch({ type: 'UPDATE_FAIL', payload: getError(err) });
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      dispatch({
+        type: 'UPDATE_FAIL',
+        payload: getError(err),
+      });
+      enqueueSnackbar(getError(err), {
+        variant: 'error',
+      });
     }
   };
   return (
@@ -120,23 +185,39 @@ function UserEdit({ params }) {
         <Grid item md={3} xs={12}>
           <Card sx={classes.section}>
             <List>
-              <NextLink href="/admin/dashboard" passHref>
+              <NextLink
+                href="/admin/dashboard"
+                passHref
+              >
                 <ListItem button component="a">
                   <ListItemText primary="Admin Dashboard"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/orders" passHref>
+              <NextLink
+                href="/admin/orders"
+                passHref
+              >
                 <ListItem button component="a">
                   <ListItemText primary="Orders"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/products" passHref>
+              <NextLink
+                href="/admin/products"
+                passHref
+              >
                 <ListItem button component="a">
                   <ListItemText primary="Products"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/users" passHref>
-                <ListItem selected button component="a">
+              <NextLink
+                href="/admin/users"
+                passHref
+              >
+                <ListItem
+                  selected
+                  button
+                  component="a"
+                >
                   <ListItemText primary="Users"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -147,16 +228,29 @@ function UserEdit({ params }) {
           <Card sx={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h1" variant="h1">
+                <Typography
+                  component="h1"
+                  variant="h1"
+                >
                   Edit User {userId}
                 </Typography>
               </ListItem>
               <ListItem>
-                {loading && <CircularProgress></CircularProgress>}
-                {error && <Typography sx={classes.error}>{error}</Typography>}
+                {loading && (
+                  <CircularProgress></CircularProgress>
+                )}
+                {error && (
+                  <Typography sx={classes.error}>
+                    {error}
+                  </Typography>
+                )}
               </ListItem>
               <ListItem>
-                <Form onSubmit={handleSubmit(submitHandler)}>
+                <Form
+                  onSubmit={handleSubmit(
+                    submitHandler
+                  )}
+                >
                   <List>
                     <ListItem>
                       <Controller
@@ -172,8 +266,14 @@ function UserEdit({ params }) {
                             fullWidth
                             id="name"
                             label="Name"
-                            error={Boolean(errors.name)}
-                            helperText={errors.name ? 'Name is required' : ''}
+                            error={Boolean(
+                              errors.name
+                            )}
+                            helperText={
+                              errors.name
+                                ? 'Name is required'
+                                : ''
+                            }
                             {...field}
                           ></TextField>
                         )}
@@ -184,7 +284,11 @@ function UserEdit({ params }) {
                         label="Is Admin"
                         control={
                           <Checkbox
-                            onClick={(e) => setIsAdmin(e.target.checked)}
+                            onClick={(e) =>
+                              setIsAdmin(
+                                e.target.checked
+                              )
+                            }
                             checked={isAdmin}
                             name="isAdmin"
                           />
@@ -200,7 +304,9 @@ function UserEdit({ params }) {
                       >
                         Update
                       </Button>
-                      {loadingUpdate && <CircularProgress />}
+                      {loadingUpdate && (
+                        <CircularProgress />
+                      )}
                     </ListItem>
                   </List>
                 </Form>
@@ -213,10 +319,15 @@ function UserEdit({ params }) {
   );
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({
+  params,
+}) {
   return {
     props: { params },
   };
 }
 
-export default dynamic(() => Promise.resolve(UserEdit), { ssr: false });
+export default dynamic(
+  () => Promise.resolve(UserEdit),
+  { ssr: false }
+);

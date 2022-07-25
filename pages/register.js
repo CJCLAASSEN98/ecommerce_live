@@ -9,11 +9,17 @@ import {
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import React, { useContext, useEffect } from 'react';
+import React, {
+  useContext,
+  useEffect,
+} from 'react';
 import Layout from '../components/Layout';
 import { Store } from '../utils/Store';
 import Cookies from 'js-cookie';
-import { Controller, useForm } from 'react-hook-form';
+import {
+  Controller,
+  useForm,
+} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import { getError } from '../utils/error';
 import Form from '../components/Form';
@@ -24,7 +30,8 @@ export default function Register() {
     control,
     formState: { errors },
   } = useForm();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } =
+    useSnackbar();
   const router = useRouter();
   const { redirect } = router.query;
   const { state, dispatch } = useContext(Store);
@@ -33,29 +40,50 @@ export default function Register() {
     if (userInfo) {
       router.push('/');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const submitHandler = async ({ name, email, password, confirmPassword }) => {
+  const submitHandler = async ({
+    name,
+    email,
+    password,
+    confirmPassword,
+  }) => {
     closeSnackbar();
     if (password !== confirmPassword) {
-      enqueueSnackbar("Passwords don't match", { variant: 'error' });
+      enqueueSnackbar("Passwords don't match", {
+        variant: 'error',
+      });
       return;
     }
     try {
-      const { data } = await axios.post('/api/users/register', {
-        name,
-        email,
-        password,
+      const { data } = await axios.post(
+        '/api/users/register',
+        {
+          name,
+          email,
+          password,
+        }
+      );
+      dispatch({
+        type: 'USER_LOGIN',
+        payload: data,
       });
-      dispatch({ type: 'USER_LOGIN', payload: data });
-      Cookies.set('userInfo', JSON.stringify(data));
+      Cookies.set(
+        'userInfo',
+        JSON.stringify(data)
+      );
       router.push(redirect || '/');
     } catch (err) {
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(err), {
+        variant: 'error',
+      });
     }
   };
   return (
     <Layout title="Register">
-      <Form onSubmit={handleSubmit(submitHandler)}>
+      <Form
+        onSubmit={handleSubmit(submitHandler)}
+      >
         <Typography component="h1" variant="h1">
           Register
         </Typography>
@@ -79,7 +107,8 @@ export default function Register() {
                   error={Boolean(errors.name)}
                   helperText={
                     errors.name
-                      ? errors.name.type === 'minLength'
+                      ? errors.name.type ===
+                        'minLength'
                         ? 'Name length is more than 1'
                         : 'Name is required'
                       : ''
@@ -96,7 +125,8 @@ export default function Register() {
               defaultValue=""
               rules={{
                 required: true,
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                pattern:
+                  /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
               }}
               render={({ field }) => (
                 <TextField
@@ -108,7 +138,8 @@ export default function Register() {
                   error={Boolean(errors.email)}
                   helperText={
                     errors.email
-                      ? errors.email.type === 'pattern'
+                      ? errors.email.type ===
+                        'pattern'
                         ? 'Email is not valid'
                         : 'Email is required'
                       : ''
@@ -133,11 +164,14 @@ export default function Register() {
                   fullWidth
                   id="password"
                   label="Password"
-                  inputProps={{ type: 'password' }}
+                  inputProps={{
+                    type: 'password',
+                  }}
                   error={Boolean(errors.password)}
                   helperText={
                     errors.password
-                      ? errors.password.type === 'minLength'
+                      ? errors.password.type ===
+                        'minLength'
                         ? 'Password length is more than 5'
                         : 'Password is required'
                       : ''
@@ -162,11 +196,16 @@ export default function Register() {
                   fullWidth
                   id="confirmPassword"
                   label="Confirm Password"
-                  inputProps={{ type: 'password' }}
-                  error={Boolean(errors.confirmPassword)}
+                  inputProps={{
+                    type: 'password',
+                  }}
+                  error={Boolean(
+                    errors.confirmPassword
+                  )}
                   helperText={
                     errors.confirmPassword
-                      ? errors.confirmPassword.type === 'minLength'
+                      ? errors.confirmPassword
+                          .type === 'minLength'
                         ? 'Confirm Password length is more than 5'
                         : 'Confirm  Password is required'
                       : ''
@@ -177,13 +216,23 @@ export default function Register() {
             ></Controller>
           </ListItem>
           <ListItem>
-            <Button variant="contained" type="submit" fullWidth color="primary">
+            <Button
+              variant="contained"
+              type="submit"
+              fullWidth
+              color="primary"
+            >
               Register
             </Button>
           </ListItem>
           <ListItem>
             Already have an account? &nbsp;
-            <NextLink href={`/login?redirect=${redirect || '/'}`} passHref>
+            <NextLink
+              href={`/login?redirect=${
+                redirect || '/'
+              }`}
+              passHref
+            >
               <Link>Login</Link>
             </NextLink>
           </ListItem>

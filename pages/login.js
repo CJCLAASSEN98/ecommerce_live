@@ -9,11 +9,17 @@ import {
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import React, { useContext, useEffect } from 'react';
+import React, {
+  useContext,
+  useEffect,
+} from 'react';
 import Layout from '../components/Layout';
 import { Store } from '../utils/Store';
 import Cookies from 'js-cookie';
-import { Controller, useForm } from 'react-hook-form';
+import {
+  Controller,
+  useForm,
+} from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import { getError } from '../utils/error';
 import Form from '../components/Form';
@@ -24,7 +30,8 @@ export default function Login() {
     control,
     formState: { errors },
   } = useForm();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } =
+    useSnackbar();
   const router = useRouter();
   const { redirect } = router.query; // login?redirect=/shipping
   const { state, dispatch } = useContext(Store);
@@ -33,25 +40,42 @@ export default function Login() {
     if (userInfo) {
       router.push('/');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const submitHandler = async ({ email, password }) => {
+  const submitHandler = async ({
+    email,
+    password,
+  }) => {
     closeSnackbar();
     try {
-      const { data } = await axios.post('/api/users/login', {
-        email,
-        password,
+      const { data } = await axios.post(
+        '/api/users/login',
+        {
+          email,
+          password,
+        }
+      );
+      dispatch({
+        type: 'USER_LOGIN',
+        payload: data,
       });
-      dispatch({ type: 'USER_LOGIN', payload: data });
-      Cookies.set('userInfo', JSON.stringify(data));
+      Cookies.set(
+        'userInfo',
+        JSON.stringify(data)
+      );
       router.push(redirect || '/');
     } catch (err) {
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(err), {
+        variant: 'error',
+      });
     }
   };
   return (
     <Layout title="Login">
-      <Form onSubmit={handleSubmit(submitHandler)}>
+      <Form
+        onSubmit={handleSubmit(submitHandler)}
+      >
         <Typography component="h1" variant="h1">
           Login
         </Typography>
@@ -63,7 +87,8 @@ export default function Login() {
               defaultValue=""
               rules={{
                 required: true,
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                pattern:
+                  /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
               }}
               render={({ field }) => (
                 <TextField
@@ -75,7 +100,8 @@ export default function Login() {
                   error={Boolean(errors.email)}
                   helperText={
                     errors.email
-                      ? errors.email.type === 'pattern'
+                      ? errors.email.type ===
+                        'pattern'
                         ? 'Email is not valid'
                         : 'Email is required'
                       : ''
@@ -100,11 +126,14 @@ export default function Login() {
                   fullWidth
                   id="password"
                   label="Password"
-                  inputProps={{ type: 'password' }}
+                  inputProps={{
+                    type: 'password',
+                  }}
                   error={Boolean(errors.password)}
                   helperText={
                     errors.password
-                      ? errors.password.type === 'minLength'
+                      ? errors.password.type ===
+                        'minLength'
                         ? 'Password length is more than 5'
                         : 'Password is required'
                       : ''
@@ -115,13 +144,23 @@ export default function Login() {
             ></Controller>
           </ListItem>
           <ListItem>
-            <Button variant="contained" type="submit" fullWidth color="primary">
+            <Button
+              variant="contained"
+              type="submit"
+              fullWidth
+              color="primary"
+            >
               Login
             </Button>
           </ListItem>
           <ListItem>
             Don&apos;t have an account? &nbsp;
-            <NextLink href={`/register?redirect=${redirect || '/'}`} passHref>
+            <NextLink
+              href={`/register?redirect=${
+                redirect || '/'
+              }`}
+              passHref
+            >
               <Link>Register</Link>
             </NextLink>
           </ListItem>

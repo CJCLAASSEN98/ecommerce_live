@@ -298,12 +298,15 @@ function Order({ params }) {
   // Merchant details
   myData['merchant_id'] = '10000100';
   myData['merchant_key'] = '46f0cd694581a';
-  myData['return_url'] =
-    'http://www.yourdomain.co.za/return_url';
-  myData['cancel_url'] =
-    'http://www.yourdomain.co.za/cancel_url';
-  myData['notify_url'] =
-    'http://www.yourdomain.co.za/notify_url';
+  myData[
+    'return_url'
+  ] = `http://www.shop.ajkitsune.co.za/order/${orderId}`;
+  myData[
+    'cancel_url'
+  ] = `http://www.shop.ajkitsune.co.za/order/${orderId}`;
+  myData[
+    'notify_url'
+  ] = `http://www.shop.ajkitsune.co.za/api/orders/${orderId}/notify_url`;
   // Buyer details
   myData['name_first'] = String(userInfo.name);
   myData['email_address'] = String(
