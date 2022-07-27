@@ -208,7 +208,7 @@ function AdminOrders() {
                               {order.createdAt}
                             </TableCell>
                             <TableCell>
-                              ${order.totalPrice}
+                              R{order.totalPrice}
                             </TableCell>
                             <TableCell>
                               {order.isPaid

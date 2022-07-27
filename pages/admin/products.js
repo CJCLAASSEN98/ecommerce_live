@@ -320,7 +320,7 @@ function AdminProdcuts() {
                                 {product.name}
                               </TableCell>
                               <TableCell>
-                                ${product.price}
+                                R{product.price}
                               </TableCell>
                               <TableCell>
                                 {product.category}
